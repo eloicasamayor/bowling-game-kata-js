@@ -1,14 +1,43 @@
 import { Game } from "./bowling";
 
-// bowling.spec.js
+let g;
+beforeEach(() => (g = new Game()));
+
+function rollMany(rolls, pins) {
+  for (let i = 0; i < rolls; i += 1) g.roll(pins);
+}
+function rollStrike() {
+  g.roll(10);
+}
+function rollSpare() {
+  g.roll(5);
+  g.roll(5);
+}
 test("gutter game", () => {
-  const g = new Game();
-  for (let i = 0; i < 20; i++) g.roll(0);
+  rollMany(20, 0);
   expect(g.score()).toBe(0);
 });
 
 test("all ones", () => {
-  const g = new Game();
-  for (let i = 0; i < 20; i++) g.roll(1);
+  rollMany(20, 1);
   expect(g.score()).toBe(20);
+});
+
+test("one spare", () => {
+  rollSpare();
+  g.roll(3);
+  rollMany(17, 0);
+  expect(g.score()).toBe(16);
+});
+
+test("one strike", () => {
+  rollStrike();
+  g.roll(3);
+  g.roll(4);
+  rollMany(16, 0);
+  expect(g.score()).toBe(24);
+});
+test("perfect game", () => {
+  rollMany(12, 10);
+  expect(g.score()).toBe(300);
 });
